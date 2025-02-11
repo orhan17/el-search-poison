@@ -51,7 +51,6 @@ class Product extends Model
         });
 
         static::deleted(function ($product) {
-            // Удаляем из индекса
             app(Client::class)->delete([
                 'index' => 'products',
                 'id' => $product->id,

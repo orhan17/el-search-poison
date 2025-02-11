@@ -19,20 +19,17 @@ class ReindexProducts extends Command
 
     public function handle(Client $client)
     {
-        // 1. Удаляем индекс, если он есть
         if ($client->indices()->exists(['index' => 'products'])->asBool()) {
             $this->info('Deleting existing index [products]...');
             $client->indices()->delete(['index' => 'products']);
         }
 
-        // 2. Создаём индекс заново с нужным маппингом
         $this->info('Creating index [products] with correct mapping...');
         $client->indices()->create([
             'index' => 'products',
             'body'  => [
                 'mappings' => [
                     'properties' => [
-                        // Поля, по которым вы делаете агрегации, пусть будут keyword
                         'brand' => [
                             'type' => 'keyword',
                         ],
@@ -56,11 +53,9 @@ class ReindexProducts extends Command
             ]
         ]);
 
-        // 3. Берём товары из БД
         $products = Product::all();
         $this->info("Found {$products->count()} products...");
 
-        // 4. Индексируем по одному (для наглядности), либо через bulk
         foreach ($products as $product) {
             $params = [
                 'index' => 'products',
