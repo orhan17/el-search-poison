@@ -41,7 +41,8 @@
    docker compose exec app bash
    composer install
    php artisan key:generate
-   php artisan migrate
+   php artisan migrate --seed
+   php artisan es:reindex-products
    exit
    ```
 
@@ -50,3 +51,4 @@
    - [http://localhost:8081](http://localhost:8081) – phpMyAdmin (логин: `laravel`, пароль: `laravel`, если не меняли)
    - [http://localhost:9090](http://localhost:9090) – Prometheus
    - [http://localhost:3000](http://localhost:3000) – Grafana
+   - http://localhost:8000/api/search?q=%D0%91%D1%80%D0%BE%D1%88%D1%8C проверка индекса
